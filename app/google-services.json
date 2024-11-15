@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "408669098098",
+    "project_id": "book-tracker-fac7a",
+    "storage_bucket": "book-tracker-fac7a.firebasestorage.app",
+    "firebase_url": "https://book-tracker-fac7a-default-rtdb.europe-west1.firebasedatabase.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408669098098:android:16834b959a7ecb5be5f2eb",
+        "android_client_info": {
+          "package_name": "com.example.book_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDh8W7bfQP5cR2Jq3yvnQ-rZ4xC32CORcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
