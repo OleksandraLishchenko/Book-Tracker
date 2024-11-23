@@ -34,6 +34,10 @@ class LoginActivity : AppCompatActivity() {
         }
         findViewById<TextView>(R.id.register).setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
+
+        }
+        findViewById<TextView>(R.id.ForgotPassword).setOnClickListener {
+            startActivity(Intent(this, ForgotPassword::class.java))
         }
     }
 

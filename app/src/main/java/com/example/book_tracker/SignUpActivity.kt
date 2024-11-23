@@ -37,8 +37,10 @@ class SignUpActivity : AppCompatActivity() {
                 !isEmailValid(email) -> {
                     Toast.makeText(this, "Invalid email format. Please enter a valid email.", Toast.LENGTH_SHORT).show()
                 }
+                !isPasswordStrong(password) -> {
+                    Toast.makeText(this, "Password must be at least 8 characters long, contain a mix of uppercase, lowercase, digits, and special characters.", Toast.LENGTH_LONG).show()
+                }
                 else -> {
-
                     signUp(fullName, email, password)
                 }
             }
@@ -47,10 +49,17 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
+
     private fun isEmailValid(email: String): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
         return email.matches(emailPattern.toRegex())
     }
+
+    private fun isPasswordStrong(password: String): Boolean {
+        val passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&=+])[A-Za-z\\d@$!%*?&]{6,}$"
+        return password.matches(passwordPattern.toRegex())
+    }
+
     private fun signUp(fullName: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -67,7 +76,6 @@ class SignUpActivity : AppCompatActivity() {
                             }
                         }
                 } else {
-
                     when (val exception = task.exception) {
                         is FirebaseAuthUserCollisionException -> {
                             Toast.makeText(this, "This email is already registered. Please use a different email or log in.", Toast.LENGTH_SHORT).show()
@@ -80,3 +88,4 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 }
+

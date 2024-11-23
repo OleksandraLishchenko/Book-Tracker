@@ -13,10 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Book_tracker">
         <activity
-            android:name=".AddBookActivity"
+            android:name=".ForgotPassword"
             android:exported="false" />
         <activity
-            android:name=".AddbookActivity"
+            android:name=".AddBookActivity"
             android:exported="false" />
         <activity
             android:name=".AddListActivity"

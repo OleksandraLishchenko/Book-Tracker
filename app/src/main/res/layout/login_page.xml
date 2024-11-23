@@ -90,6 +90,25 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <TextView
+        android:id="@+id/ForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="253dp"
+        android:layout_marginTop="21dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/forgot_password"
+
+        android:textColor="@color/dark_brown"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_input"
+        tools:ignore="TouchTargetSizeCheck" />
+
     <Button
         android:id="@+id/next_button"
         android:layout_width="300dp"
@@ -117,6 +136,7 @@
         android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/next_button" />
+
 
     <TextView
         android:id="@+id/register"

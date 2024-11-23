@@ -66,6 +66,8 @@ class AddListActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 progressDialog.dismiss()
                 Toast.makeText(this, "Added successfully...", Toast.LENGTH_SHORT).show()
+                finish()
+
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
