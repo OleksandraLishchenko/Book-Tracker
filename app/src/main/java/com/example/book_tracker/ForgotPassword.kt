@@ -26,17 +26,14 @@ class ForgotPassword : AppCompatActivity() {
         progressDialog.setTitle("Please wait...")
         progressDialog.setCanceledOnTouchOutside(false)
 
-        // Set onClickListener for the reset password button
         binding.resetPasswordButton.setOnClickListener {
             validateInput()
         }
     }
 
-    // Validate the email input
     private fun validateInput() {
         val email = binding.resetEmailEditText.text.toString().trim()
 
-        // Check if the email field is not empty
         if (email.isEmpty()) {
             Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show()
         } else {
@@ -44,7 +41,6 @@ class ForgotPassword : AppCompatActivity() {
         }
     }
 
-    // Send the password reset email through Firebase
     private fun sendPasswordResetEmail(email: String) {
         progressDialog.setMessage("Sending password reset email...")
         progressDialog.show()
@@ -53,7 +49,7 @@ class ForgotPassword : AppCompatActivity() {
             .addOnSuccessListener {
                 progressDialog.dismiss()
                 Toast.makeText(this, "Password reset email sent", Toast.LENGTH_SHORT).show()
-                finish() // Close this activity and return to login screen
+                finish()
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
