@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDD6C8"
-    tools:context=".MainActivity">
+    tools:context=".UserProfileActivity">
 
     <ImageView
         android:id="@+id/top_cloud"
@@ -60,7 +60,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/circular_background">
 
-        <!-- ImageView inside FrameLayout for displaying the user photo -->
         <ImageView
             android:id="@+id/UserPhoto"
             android:layout_width="160dp"
@@ -83,8 +82,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/circular_background"
-            android:src="@drawable/baseline_auto_fix_high_24"
-            />
+            android:src="@drawable/baseline_auto_fix_high_24" />
+
+
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/userEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="100dp"
+        android:gravity="center"
+        android:text="@string/email_placeholder"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userName" />
+
+    <TextView
+        android:id="@+id/userCreationDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:gravity="center"
+        android:text="@string/creation_date_placeholder"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userEmail" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,9 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var userNameTextView: TextView
     private lateinit var userPhotoButton: ImageButton
     private lateinit var userPhotoView: ImageView
+    private lateinit var userEmailTextView: TextView
+    private lateinit var userCreationDateTextView: TextView
+
 
     private val PICK_IMAGE_REQUEST = 1
     private lateinit var auth: FirebaseAuth
@@ -33,9 +36,12 @@ class UserProfileActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
+
         userNameTextView = findViewById(R.id.userName)
         userPhotoButton = findViewById(R.id.uploadPhoto)
         userPhotoView = findViewById(R.id.UserPhoto)
+        userEmailTextView = findViewById(R.id.userEmail)
+        userCreationDateTextView = findViewById(R.id.userCreationDate)
 
         loadUserData()
 
@@ -51,14 +57,9 @@ class UserProfileActivity : AppCompatActivity() {
         val userId = user?.uid ?: return
 
         val userRef = database.getReference("Users").child(userId).child("fullName")
-
         userRef.get().addOnSuccessListener {
             val fullName = it.value as? String
-            if (!fullName.isNullOrEmpty()) {
-                userNameTextView.text = fullName
-            } else {
-                userNameTextView.text = "Name not found"
-            }
+            userNameTextView.text = fullName ?: "Name not found"
         }.addOnFailureListener {
             Toast.makeText(this, "Failed to load user name.", Toast.LENGTH_SHORT).show()
         }
@@ -73,7 +74,17 @@ class UserProfileActivity : AppCompatActivity() {
                 userPhotoView.clipToOutline = true
             }
         }
+
+        userEmailTextView.text = "Email: ${user?.email ?: "Email not found"}"
+        val creationDate = user?.metadata?.creationTimestamp
+        if (creationDate != null) {
+            val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(creationDate)
+            userCreationDateTextView.text = "Account Created: $date"
+        } else {
+            userCreationDateTextView.text = "Account Created: Not available"
+        }
     }
+
 
     private fun chooseImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)

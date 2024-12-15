@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">bookapp</string>
+    <string name="app_name">Libro</string>
     <string name="sign_up">Sign up</string>
     <string name="log_in">Log in</string>
     <string name="let_s_get_started">Let\'s get started</string>
@@ -39,4 +39,7 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="remember_me">Remember me</string>
     <string name="user_name">User Name</string>
+    <string name="email_placeholder">Email: </string>
+    <string name="creation_date_placeholder">Account Created: </string>
+
 </resources>

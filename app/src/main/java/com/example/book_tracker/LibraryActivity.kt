@@ -1,6 +1,7 @@
 package com.example.book_tracker
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineStart
+import android.util.Base64
 
 
 class LibraryActivity : AppCompatActivity() {
@@ -22,6 +25,7 @@ class LibraryActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var listArrayList: ArrayList<ModelList>
     private lateinit var adapterList: AdapterList
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +35,12 @@ class LibraryActivity : AppCompatActivity() {
             startActivity(Intent(this, AddBookActivity::class.java))
         }
         auth = FirebaseAuth.getInstance()
-        loadLists()
 
-        val userPhotoButton = findViewById<ImageButton>(R.id.UserPhoto1) // Make sure the ID is correct
+        loadLists()
+        loadUserProfilePhoto()
+        addDynamicPhotoListener()
+
+        val userPhotoButton = findViewById<ImageButton>(R.id.UserPhoto1)
         userPhotoButton.setOnClickListener {
             val intent = Intent(this, UserProfileActivity::class.java)
             startActivity(intent)
@@ -63,13 +70,33 @@ class LibraryActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadUserProfilePhoto() {
+        val user = auth.currentUser
+        val userId = user?.uid ?: return
+
+        val photoRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("profilePhoto")
+        photoRef.get().addOnSuccessListener {
+            val base64Photo = it.value as? String
+            if (base64Photo != null) {
+                val decodedBytes = Base64.decode(base64Photo, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                val userPhotoButton = findViewById<ImageButton>(R.id.UserPhoto1)
+                userPhotoButton.setImageBitmap(bitmap)
+                userPhotoButton.clipToOutline = true
+                userPhotoButton.scaleType = ImageView.ScaleType.CENTER_CROP
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to load profile photo.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun loadLists() {
         listArrayList = ArrayList()
         val currentUserUid = auth.currentUser?.uid
 
         if (currentUserUid != null) {
             val ref = FirebaseDatabase.getInstance().getReference("Lists")
-            ref.orderByChild("uid").equalTo(currentUserUid)  // Filter by uid
+            ref.orderByChild("uid").equalTo(currentUserUid)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         listArrayList.clear()
@@ -111,13 +138,40 @@ class LibraryActivity : AppCompatActivity() {
                         ).show()
                     }
             }
-
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@LibraryActivity, "Operation cancelled", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this@LibraryActivity,
+                    "Operation cancelled",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
+
+
         })
     }
+    private fun addDynamicPhotoListener() {
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return
+
+        val photoRef = FirebaseDatabase.getInstance().getReference("users").child(userId)
+            .child("profilePhoto")
+        photoRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val base64Photo = snapshot.value as? String
+                if (base64Photo != null) {
+                    val decodedBytes = Base64.decode(base64Photo, Base64.DEFAULT)
+                    val bitmap =
+                        BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                    val userPhotoButton = findViewById<ImageButton>(R.id.UserPhoto1)
+                    userPhotoButton.setImageBitmap(bitmap)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@LibraryActivity, "Failed to listen for profile photo updates.", Toast.LENGTH_SHORT).show()
+            }
 
 
-}
+        })
+}}

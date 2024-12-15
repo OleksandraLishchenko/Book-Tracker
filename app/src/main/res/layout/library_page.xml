@@ -74,17 +74,26 @@
         android:src="@drawable/baseline_bookmark_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageButton
-        android:id="@+id/UserPhoto1"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="Add Profile Photo"
-        android:src="@drawable/user_circle_single_small"
+        android:background="@drawable/circular_background"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageButton
+            android:id="@+id/UserPhoto1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/circular_background"
+            android:clipToOutline="true"
+            android:contentDescription="Add Profile Photo"
+            android:outlineProvider="background"
+            android:src="@drawable/user_circle_single_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
