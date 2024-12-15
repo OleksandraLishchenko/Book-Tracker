@@ -1,7 +1,10 @@
 package com.example.book_tracker
+
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -11,12 +14,27 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var emailEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var rememberMeCheckBox: CheckBox
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_page)
         auth = FirebaseAuth.getInstance()
-        val emailEditText = findViewById<EditText>(R.id.emailEditText)
-        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
+        emailEditText = findViewById(R.id.emailEditText)
+        passwordEditText = findViewById(R.id.passwordEditText)
+        rememberMeCheckBox = findViewById(R.id.rememberMeCheckBox)
+        sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE)
+        val savedEmail = sharedPreferences.getString("email", "")
+        val savedPassword = sharedPreferences.getString("password", "")
+        if (savedEmail != "" && savedPassword != "") {
+            emailEditText.setText(savedEmail)
+            passwordEditText.setText(savedPassword)
+            rememberMeCheckBox.isChecked = true
+        }
+
         findViewById<Button>(R.id.next_button).setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -28,14 +46,14 @@ class LoginActivity : AppCompatActivity() {
             } else if (password.isEmpty()) {
                 Toast.makeText(this, "Please enter your password.", Toast.LENGTH_SHORT).show()
             } else {
-
                 login(email, password)
             }
         }
+
         findViewById<TextView>(R.id.register).setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
-
         }
+
         findViewById<TextView>(R.id.ForgotPassword).setOnClickListener {
             startActivity(Intent(this, ForgotPassword::class.java))
         }
@@ -46,6 +64,14 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+
+                    if (rememberMeCheckBox.isChecked) {
+                        val editor = sharedPreferences.edit()
+                        editor.putString("email", email)
+                        editor.putString("password", password)
+                        editor.apply()
+                    }
+
                     startActivity(Intent(this, LibraryActivity::class.java))
                 } else {
                     when (val exception = task.exception) {
@@ -60,4 +86,3 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 }
-
