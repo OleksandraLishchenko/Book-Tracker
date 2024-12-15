@@ -49,7 +49,6 @@ android {
 
 dependencies {
     implementation(libs.androidx.recyclerview)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -64,7 +63,9 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.androidx.cardview)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.crashlytics.buildtools)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
 }

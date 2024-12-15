@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.book_tracker.databinding.LibraryPageBinding
@@ -30,6 +32,14 @@ class LibraryActivity : AppCompatActivity() {
         }
         auth = FirebaseAuth.getInstance()
         loadLists()
+
+        val userPhotoButton = findViewById<ImageButton>(R.id.UserPhoto1) // Make sure the ID is correct
+        userPhotoButton.setOnClickListener {
+            val intent = Intent(this, UserProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+
 
         binding.searchEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

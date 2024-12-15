@@ -13,6 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Book_tracker">
         <activity
+            android:name=".UserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditBookActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BookListActivity"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPassword"
             android:exported="false" />
         <activity

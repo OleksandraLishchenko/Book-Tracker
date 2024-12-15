@@ -37,4 +37,6 @@
     <string name="adding_a_book">Adding a book</string>
     <string name="delete_button">delete button</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="user_name">User Name</string>
 </resources>

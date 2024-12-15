@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.FirebaseDatabase
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -65,16 +66,21 @@ class SignUpActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    val profileUpdates = UserProfileChangeRequest.Builder()
-                        .setDisplayName(fullName)
-                        .build()
-                    user?.updateProfile(profileUpdates)
-                        ?.addOnCompleteListener { updateTask ->
-                            if (updateTask.isSuccessful) {
-                                Toast.makeText(this, "Sign-Up Successful!", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, LibraryActivity::class.java))
+                    val userId = user?.uid
+
+                    if (userId != null) {
+                        saveUserToDatabase(userId, fullName, email)
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName(fullName)
+                            .build()
+                        user.updateProfile(profileUpdates)
+                            ?.addOnCompleteListener { updateTask ->
+                                if (updateTask.isSuccessful) {
+                                    Toast.makeText(this, "Sign-Up Successful!", Toast.LENGTH_SHORT).show()
+                                    startActivity(Intent(this, LibraryActivity::class.java))
+                                }
                             }
-                        }
+                    }
                 } else {
                     when (val exception = task.exception) {
                         is FirebaseAuthUserCollisionException -> {
@@ -87,5 +93,21 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
     }
+    private fun saveUserToDatabase(userId: String, fullName: String, email: String) {
+        val userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId)
+        val userInfo = mapOf(
+            "fullName" to fullName,
+            "email" to email
+        )
+
+        userRef.setValue(userInfo).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "User data saved successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to save user data: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }
+
 

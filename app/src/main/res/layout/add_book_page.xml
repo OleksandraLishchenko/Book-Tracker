@@ -22,13 +22,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <FrameLayout
+        android:id="@+id/bookCoverLayout"
+        android:layout_width="120dp"
+        android:layout_height="145dp"
+        android:layout_marginTop="215dp"
+        android:layout_marginEnd="287dp"
+        android:background="@color/dark_brown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/bookCoverIv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Book Cover"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/uploadCoverBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:contentDescription="Add Book Cover"
+            android:background="@android:color/transparent"
+            android:src="@drawable/addcover" />
+
+    </FrameLayout>
+
     <EditText
         android:id="@+id/bookTitleEditText"
-        android:layout_width="401dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="150dp"
-        android:background="@color/white"
+        android:background="@drawable/rounded_edittext_bg"
         android:hint="Book Title"
+        android:padding="10dp"
         android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,11 +66,13 @@
 
     <EditText
         android:id="@+id/bookAuthorEditText"
-        android:layout_width="401dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="15dp"
-        android:background="@color/white"
+        android:background="@drawable/rounded_edittext_bg"
         android:hint="Author"
+        android:padding="10dp"
         android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,11 +80,13 @@
 
     <EditText
         android:id="@+id/bookGenreEditText"
-        android:layout_width="401dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="15dp"
-        android:background="@color/white"
+        android:background="@drawable/rounded_edittext_bg"
         android:hint="Genre"
+        android:padding="10dp"
         android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,11 +94,13 @@
 
     <EditText
         android:id="@+id/bookNotesEditText"
-        android:layout_width="401dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="15dp"
-        android:background="@color/white"
+        android:background="@drawable/rounded_edittext_bg"
         android:hint="Notes"
+        android:padding="10dp"
         android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,10 +108,11 @@
 
     <Spinner
         android:id="@+id/listSpinner"
-        android:layout_width="401dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="15dp"
-        android:background="#B7C67C4E"
+        android:background="@drawable/rounded_edittext_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bookNotesEditText" />
@@ -101,4 +138,18 @@
         android:src="@drawable/baseline_arrow_circle_left_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/top_cloud"
+        android:layout_width="308dp"
+        android:layout_height="99dp"
+        android:layout_marginEnd="103dp"
+        android:contentDescription="@string/picture"
+        android:scaleType="fitXY"
+        android:src="@drawable/topcloud"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+

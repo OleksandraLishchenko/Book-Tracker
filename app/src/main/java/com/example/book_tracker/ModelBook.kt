@@ -7,5 +7,6 @@ data class ModelBook(
     var author: String = "",
     var genre: String = "",
     var notes: String = "",
-    var listId: String = ""
+    var listId: String = "",
+    var uid: String = ""
 )

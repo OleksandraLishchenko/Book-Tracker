@@ -1,7 +1,12 @@
 package com.example.book_tracker
 
 import android.app.ProgressDialog
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 
 class AddBookActivity : AppCompatActivity() {
     private lateinit var binding: AddBookPageBinding
@@ -21,8 +26,10 @@ class AddBookActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
     private lateinit var listNames: ArrayList<String>
     private lateinit var listIds: ArrayList<String>
+    private var bookCoverBase64: String? = null
 
     private var selectedListId = ""
+    private val IMAGE_PICK_CODE = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +44,11 @@ class AddBookActivity : AppCompatActivity() {
         progressDialog.setCanceledOnTouchOutside(false)
 
         loadLists()
+
+        binding.uploadCoverBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, IMAGE_PICK_CODE)
+        }
 
         binding.submitButton.setOnClickListener {
             validateData()
@@ -94,26 +106,44 @@ class AddBookActivity : AppCompatActivity() {
     private fun addBookToFirebase(title: String, author: String, genre: String, notes: String) {
         progressDialog.show()
         val timestamp = System.currentTimeMillis()
-        val bookData = HashMap<String, Any>()
-        bookData["title"] = title
-        bookData["author"] = author
-        bookData["genre"] = genre
-        bookData["notes"] = notes
-        bookData["id"] = "$timestamp"
-        bookData["listId"] = selectedListId
-        bookData["uid"] = "${auth.uid}"
+        val bookData = hashMapOf(
+            "title" to title,
+            "author" to author,
+            "genre" to genre,
+            "notes" to notes,
+            "cover" to (bookCoverBase64 ?: ""),
+            "id" to "$timestamp",
+            "listId" to selectedListId,
+            "uid" to auth.uid!!
+        )
 
-        val ref = FirebaseDatabase.getInstance().getReference("Lists").child(selectedListId)
-        ref.child("$timestamp")
-            .setValue(bookData)
+        val ref = database.child("Lists").child(selectedListId).child("$timestamp")
+        ref.setValue(bookData)
             .addOnSuccessListener {
                 progressDialog.dismiss()
                 Toast.makeText(this, "Book added successfully", Toast.LENGTH_SHORT).show()
                 finish()
             }
-            .addOnFailureListener { e ->
+            .addOnFailureListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, "Failed to add book: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to add book: ${it.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK && data != null) {
+            val uri = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+            binding.bookCoverIv.setImageBitmap(bitmap)
+            bookCoverBase64 = encodeImageToBase64(bitmap)
+        }
+    }
+
+    private fun encodeImageToBase64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 }
