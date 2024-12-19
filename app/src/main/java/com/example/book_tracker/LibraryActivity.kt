@@ -74,7 +74,7 @@ class LibraryActivity : AppCompatActivity() {
         val user = auth.currentUser
         val userId = user?.uid ?: return
 
-        val photoRef = FirebaseDatabase.getInstance().getReference("users").child(userId).child("profilePhoto")
+        val photoRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("profilePhoto")
         photoRef.get().addOnSuccessListener {
             val base64Photo = it.value as? String
             if (base64Photo != null) {

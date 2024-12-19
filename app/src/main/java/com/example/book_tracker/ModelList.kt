@@ -5,7 +5,6 @@ class ModelList {
     var list: String = ""
     var timestamp: Long = 0
     var uid: String = ""
-    var isPermanent: Boolean = false
 
     constructor()
     constructor(id: String, list: String, timestamp: Long, uid: String, isPermanent: Boolean = false) {
@@ -13,6 +12,5 @@ class ModelList {
         this.list = list
         this.timestamp = timestamp
         this.uid = uid
-        this.isPermanent = isPermanent
     }
 }

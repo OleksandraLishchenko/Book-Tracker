@@ -64,7 +64,7 @@ class UserProfileActivity : AppCompatActivity() {
             Toast.makeText(this, "Failed to load user name.", Toast.LENGTH_SHORT).show()
         }
 
-        val photoRef = database.getReference("users").child(userId).child("profilePhoto")
+        val photoRef = database.getReference("Users").child(userId).child("profilePhoto")
         photoRef.get().addOnSuccessListener {
             val base64Photo = it.value as? String
             if (base64Photo != null) {
@@ -115,7 +115,7 @@ class UserProfileActivity : AppCompatActivity() {
     private fun saveUserPhotoToDatabase(base64Image: String) {
         val user = auth.currentUser
         val userId = user?.uid ?: return
-        val userRef = database.getReference("users").child(userId)
+        val userRef = database.getReference("Users").child(userId)
 
         userRef.child("profilePhoto").setValue(base64Image).addOnCompleteListener {
             if (it.isSuccessful) {
