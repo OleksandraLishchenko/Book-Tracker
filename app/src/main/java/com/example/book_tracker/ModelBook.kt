@@ -1,4 +1,3 @@
-// Create a new file: ModelBook.kt
 package com.example.book_tracker
 
 data class ModelBook(

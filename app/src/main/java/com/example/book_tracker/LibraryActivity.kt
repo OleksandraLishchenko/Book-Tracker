@@ -113,43 +113,6 @@ class LibraryActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun moveBookToList(bookId: String, oldListId: String, newListId: String) {
-        val refOld =
-            FirebaseDatabase.getInstance().getReference("Books").child(oldListId).child(bookId)
-        refOld.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val bookData = snapshot.value as HashMap<String, Any>
-                refOld.removeValue()
-                val refNew = FirebaseDatabase.getInstance().getReference("Books").child(newListId)
-                refNew.child(bookId).setValue(bookData)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                            this@LibraryActivity,
-                            "Book moved successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(
-                            this@LibraryActivity,
-                            "Failed to move book: ${e.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(
-                    this@LibraryActivity,
-                    "Operation cancelled",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            }
-
-
-        })
-    }
     private fun addDynamicPhotoListener() {
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid ?: return
