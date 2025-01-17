@@ -1,12 +1,14 @@
 package com.example.book_tracker
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,7 +25,9 @@ class UserProfileActivity : AppCompatActivity() {
     private lateinit var userPhotoView: ImageView
     private lateinit var userEmailTextView: TextView
     private lateinit var userCreationDateTextView: TextView
-
+    private lateinit var logoutButton: Button
+    private lateinit var deleteAccountButton: Button
+    private lateinit var changeEmailButton: ImageButton
 
     private val PICK_IMAGE_REQUEST = 1
     private lateinit var auth: FirebaseAuth
@@ -36,12 +40,14 @@ class UserProfileActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-
         userNameTextView = findViewById(R.id.userName)
         userPhotoButton = findViewById(R.id.uploadPhoto)
         userPhotoView = findViewById(R.id.UserPhoto)
         userEmailTextView = findViewById(R.id.userEmail)
         userCreationDateTextView = findViewById(R.id.userCreationDate)
+        logoutButton = findViewById(R.id.logout_button)
+        deleteAccountButton = findViewById(R.id.dltacc_button)
+        changeEmailButton = findViewById(R.id.changeEmailButton)
 
         loadUserData()
 
@@ -49,7 +55,65 @@ class UserProfileActivity : AppCompatActivity() {
             chooseImageFromGallery()
         }
 
+        logoutButton.setOnClickListener {
+            logOutUser()
+        }
 
+        deleteAccountButton.setOnClickListener {
+            confirmAndDeleteAccount()
+        }
+
+        changeEmailButton.setOnClickListener {
+            val intent = Intent(this@UserProfileActivity, ChangeEmailActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun logOutUser() {
+        auth.signOut()
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    private fun confirmAndDeleteAccount() {
+        val user = auth.currentUser
+        if (user == null) {
+            Toast.makeText(this, "No user found.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Delete Account")
+            .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
+            .setPositiveButton("Yes") { _, _ ->
+                deleteAccount(user.uid)
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
+
+    private fun deleteAccount(userId: String) {
+        val userRef = database.getReference("Users").child(userId)
+        userRef.removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                auth.currentUser?.delete()?.addOnCompleteListener { deleteTask ->
+                    if (deleteTask.isSuccessful) {
+                        Toast.makeText(this, "Account deleted successfully", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Failed to delete account: ${deleteTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Failed to delete user data: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun loadUserData() {
@@ -84,7 +148,6 @@ class UserProfileActivity : AppCompatActivity() {
             userCreationDateTextView.text = "Account Created: Not available"
         }
     }
-
 
     private fun chooseImageFromGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -125,7 +188,4 @@ class UserProfileActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }
-

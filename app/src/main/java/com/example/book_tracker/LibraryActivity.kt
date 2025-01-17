@@ -2,6 +2,7 @@ package com.example.book_tracker
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -51,6 +52,7 @@ class LibraryActivity : AppCompatActivity() {
         binding.searchEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 try {
                     adapterList.filter.filter(s)
@@ -58,6 +60,7 @@ class LibraryActivity : AppCompatActivity() {
 
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -74,7 +77,8 @@ class LibraryActivity : AppCompatActivity() {
         val user = auth.currentUser
         val userId = user?.uid ?: return
 
-        val photoRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("profilePhoto")
+        val photoRef =
+            FirebaseDatabase.getInstance().getReference("Users").child(userId).child("profilePhoto")
         photoRef.get().addOnSuccessListener {
             val base64Photo = it.value as? String
             if (base64Photo != null) {
@@ -107,6 +111,7 @@ class LibraryActivity : AppCompatActivity() {
                         adapterList = AdapterList(this@LibraryActivity, listArrayList)
                         binding.lists.adapter = adapterList
                     }
+
                     override fun onCancelled(error: DatabaseError) {
                     }
                 })
@@ -117,24 +122,34 @@ class LibraryActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid ?: return
 
-        val photoRef = FirebaseDatabase.getInstance().getReference("users").child(userId)
-            .child("profilePhoto")
+        val photoRef =
+            FirebaseDatabase.getInstance().getReference("Users").child(userId).child("profilePhoto")
         photoRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val base64Photo = snapshot.value as? String
                 if (base64Photo != null) {
                     val decodedBytes = Base64.decode(base64Photo, Base64.DEFAULT)
-                    val bitmap =
+                    val newBitmap =
                         BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+
                     val userPhotoButton = findViewById<ImageButton>(R.id.UserPhoto1)
-                    userPhotoButton.setImageBitmap(bitmap)
+                    val currentDrawable = userPhotoButton.drawable
+                    val currentBitmap = (currentDrawable as? BitmapDrawable)?.bitmap
+                    if (currentBitmap == null || currentBitmap != newBitmap) {
+                        userPhotoButton.setImageBitmap(newBitmap)
+                        userPhotoButton.clipToOutline = true
+                        userPhotoButton.scaleType = ImageView.ScaleType.CENTER_CROP
+                    }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@LibraryActivity, "Failed to listen for profile photo updates.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@LibraryActivity,
+                    "Failed to listen for profile photo updates.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
-
         })
-}}
+    }
+}

@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="304dp"
+        android:layout_marginTop="270dp"
         android:layout_marginEnd="100dp"
         android:gravity="center"
         android:text="@string/user_name"
@@ -54,7 +54,7 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginStart="127dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginTop="110dp"
         android:layout_marginEnd="127dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -89,10 +89,10 @@
 
     <TextView
         android:id="@+id/userEmail"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="100dp"
         android:gravity="center"
         android:text="@string/email_placeholder"
@@ -106,7 +106,7 @@
         android:id="@+id/userCreationDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
         android:gravity="center"
@@ -116,4 +116,48 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userEmail" />
+
+
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="540dp"
+        android:backgroundTint="@color/dark_brown"
+        android:gravity="center"
+        android:text="@string/log_out"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/dltacc_button"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@color/dark_brown"
+        android:gravity="center"
+        android:text="@string/delete_account"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logout_button" />
+
+    <ImageButton
+        android:id="@+id/changeEmailButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/circular_background"
+        android:src="@drawable/baseline_auto_fix_high_24"
+        android:contentDescription="@string/change_email"
+        app:layout_constraintStart_toEndOf="@id/userEmail"
+        app:layout_constraintTop_toTopOf="@id/userEmail"
+        app:layout_constraintBottom_toBottomOf="@id/userEmail" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
